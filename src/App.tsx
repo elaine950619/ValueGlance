@@ -148,12 +148,28 @@ function App() {
 
   const sortedRows = [...rows].sort((a, b) => {
     const dir = sortDir === "asc" ? 1 : -1;
-    const av = a[sortKey];
-    const bv = b[sortKey];
+
+    let av: string | number;
+    let bv: string | number;
+
+    if (sortKey === "symbol") {
+      av = a.symbol;
+      bv = b.symbol;
+    } else if (sortKey === "price") {
+      // Put nulls at the end
+      av = a.price ?? Number.NEGATIVE_INFINITY;
+      bv = b.price ?? Number.NEGATIVE_INFINITY;
+    } else {
+      // sortKey === "changePercent"
+      av = a.changePercent ?? Number.NEGATIVE_INFINITY;
+      bv = b.changePercent ?? Number.NEGATIVE_INFINITY;
+    }
+
     if (av < bv) return -1 * dir;
     if (av > bv) return 1 * dir;
     return 0;
   });
+
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-50 flex justify-center items-start px-6 sm:px-10 py-10">
